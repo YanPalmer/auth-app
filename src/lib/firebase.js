@@ -5,12 +5,12 @@ import { getFirestore } from 'firebase/firestore';
 // Configuração do Firebase
 // IMPORTANTE: Substitua estas credenciais pelas suas próprias do Firebase Console
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyCri0o08Oitmt2DSCW_RDaSTVsSMhmv6S0",
+  authDomain: "auth-app-5311b.firebaseapp.com",
+  projectId: "auth-app-5311b",
+  storageBucket: "auth-app-5311b.firebasestorage.app",
+  messagingSenderId: "517013508135",
+  appId: "1:517013508135:web:2ecbeddd00349f182a7e02"
 };
 
 // Inicializar Firebase
