@@ -3,12 +3,14 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase';
 import { Button } from '@/components/ui/button.jsx';
-import { User, Mail } from 'lucide-react';
+import { User, Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import './Auth.css';
 
 function Register({ onNavigate }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -20,19 +22,18 @@ function Register({ onNavigate }) {
     setLoading(true);
 
     try {
-      // Gerar senha temporária aleatória
-      const tempPassword = Math.random().toString(36).slice(-8) + 'Aa1!';
-      
       // Criar usuário no Firebase Authentication
-      const userCredential = await createUserWithEmailAndPassword(auth, email, tempPassword);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
       // Salvar informações adicionais no Firestore
+      // IMPORTANTE: Nunca armazene senhas em texto plano no Firestore
+      // O Firebase Authentication já gerencia as senhas de forma segura (hash)
       await setDoc(doc(db, 'users', user.uid), {
         name: name,
         email: email,
         createdAt: new Date().toISOString(),
-        tempPassword: tempPassword // Em produção, envie por e-mail e não armazene
+        // Não armazenamos a senha aqui - ela é gerenciada pelo Firebase Authentication
       });
 
       // Adicionar à lista de usuários registrados
@@ -41,6 +42,7 @@ function Register({ onNavigate }) {
       setSuccess(true);
       setName('');
       setEmail('');
+      setPassword('');
       
       // Fazer logout do usuário recém-criado
       await auth.signOut();
@@ -108,6 +110,27 @@ function Register({ onNavigate }) {
               required
               className="auth-input"
             />
+          </div>
+
+          <div className="input-group password-group">
+            <Lock className="input-icon" size={20} />
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Senha"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              minLength={6}
+              className="auth-input password-input"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="password-toggle"
+              aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+            >
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
           </div>
 
           {error && <div className="error-message">{error}</div>}

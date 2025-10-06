@@ -2,12 +2,13 @@ import { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../lib/firebase';
 import { Button } from '@/components/ui/button.jsx';
-import { Mail, Lock } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import './Auth.css';
 
 function Login({ onNavigate }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -70,16 +71,24 @@ function Login({ onNavigate }) {
             />
           </div>
 
-          <div className="input-group">
+          <div className="input-group password-group">
             <Lock className="input-icon" size={20} />
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="auth-input"
+              className="auth-input password-input"
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="password-toggle"
+              aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+            >
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
           </div>
 
           <div className="remember-me">
@@ -102,7 +111,7 @@ function Login({ onNavigate }) {
         <p className="auth-footer">
           Não tem uma conta?{' '}
           <button onClick={() => onNavigate('register')} className="link-button">
-            Entre em contato com o administrador
+            Cadastre-se aqui
           </button>
         </p>
       </div>
